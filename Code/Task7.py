@@ -28,4 +28,4 @@ def flatten_dict(d: dict, key_: str = '') -> dict:
     return c
 
 
-print(flatten_dict(nested))
+print(flatten_dict(nested_))
