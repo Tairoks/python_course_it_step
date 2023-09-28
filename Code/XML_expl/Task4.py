@@ -13,3 +13,18 @@
 На выходе программы должны получить список {'attrib': 'value'}. Сохраните полученный список в json формате
 
 """
+import json
+from xml.etree import ElementTree as ET
+
+attrs = []
+
+root = ET.parse('data/data.xml')
+items = root.findall('./items/item')
+
+for item in items:
+    attrs.append({item.attrib.get("name"): item.text})
+
+print(attrs)
+
+with open('data/items.json', "w") as file:
+    json.dump(attrs, file)
