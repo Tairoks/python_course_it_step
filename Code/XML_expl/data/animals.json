@@ -1,0 +1,19 @@
+{
+  "animals": [
+    {
+      "id": 3,
+      "type": "Parrot",
+      "owner": "Johnny"
+    },
+    {
+      "id": 3,
+      "type": "Parrot",
+      "owner": "Johnny"
+    },
+    {
+      "id": 3,
+      "type": "Parrot",
+      "owner": "Johnny"
+    }
+  ]
+}
