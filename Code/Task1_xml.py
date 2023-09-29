@@ -18,7 +18,7 @@ from xml.etree import ElementTree as ET
 
 attrs = []
 
-root = ET.parse('data/data.xml')
+root = ET.parse('XML_expl/data/data.xml')
 items = root.findall('./items/item')
 
 for item in items:
@@ -26,5 +26,5 @@ for item in items:
 
 print(attrs)
 
-with open('data/items.json', "w") as file:
+with open('XML_expl/data/items.json', "w") as file:
     json.dump(attrs, file)
