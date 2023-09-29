@@ -19,4 +19,4 @@ with open('dump.sql', 'w') as f:
     # собираем дамп и сохраняем в файл- чистый SQL код.
     for line in conn.iterdump():
         f.write('%s\n' % line)
-        print('{}\n'.format(line))
+        # print('{}\n'.format(line))
