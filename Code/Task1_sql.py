@@ -16,7 +16,7 @@ def convert_tuple(data):
 
 
 sqlite3.register_adapter(list, adapt_tuple)
-sqlite3.register_converter('list', convert_tuple)
+sqlite3.register_converter('str', convert_tuple)
 
 conn = sqlite3.connect(':memory:', detect_types=sqlite3.PARSE_DECLTYPES)
 cur = conn.cursor()

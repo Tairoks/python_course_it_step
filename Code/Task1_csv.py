@@ -4,31 +4,32 @@
 даты  рождений  и  город  проживания.
 """
 import csv
+import os
 
 
-def make_file(data: list) -> None:
-    fields = ["name", "surname", "date", "city"]
-    with open("output_task1.csv", "w") as file:
-        writer = csv.DictWriter(file, fieldnames=fields)
-
-        writer.writeheader()
-        writer.writerow({
-            "name": data[0],
-            "surname": data[1],
-            "date": data[2],
-            "city": data[3]
-        })
+def make_file(writer: csv.DictWriter, data: list) -> None:
+    writer.writerow({
+        "name": data[0],
+        "surname": data[1],
+        "date": data[2],
+        "city": data[3]
+    })
 
 
 def main():
-    list_of_data = input().split()
-    make_file(list_of_data)
+    fields = ["name", "surname", "date", "city"]
+    with open("output_task1.csv", "a") as file:
+        writer = csv.DictWriter(file, fieldnames=fields, lineterminator='\n')
+        if os.stat("output_task1.csv").st_size == 0:
+            writer.writeheader()
+        else:
+            while True:
+                data = input()
+                if data == 'end':
+                    break
+                else:
+                    make_file(writer, data.split())
 
 
 if __name__ == '__main__':
     main()
-
-#TODO: Преобразовать файл таким образом, чтобы можно было добавлять записи к уже существующим
-#TODO: Выполнить цикл из нескольких вводов до ввода команды "end"
-#TODO: Подумать, как убрать пустую строку в файле между записями
-

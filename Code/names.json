@@ -1,0 +1,22 @@
+{
+  "names": [
+    {
+      "name": "Phill",
+      "surname": "Colins",
+      "date": "1950-10-25",
+      "city": "NY"
+    },
+    {
+      "name": "Michael",
+      "surname": "Jackson",
+      "date": "1960-05-20",
+      "city": "LA"
+    },
+    {
+      "name": "Michael",
+      "surname": "Jackson",
+      "date": "1960-05-20",
+      "city": "LA"
+    }
+  ]
+}
