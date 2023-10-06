@@ -1,20 +1,20 @@
 from threading import Thread, Lock
 from time import sleep
 
-
 count = 0
 lock = Lock()
 
 
-def counter(by):
-    global count
+def counter(num):
+    global count, lock
 
-    local_count = count
-    local_count += by
-    sleep(0.2)
+    with lock:
+        local_count = count
+        local_count += num
+        sleep(0.5)
+        count = local_count
 
-    count = local_count
-    print(f'Count {count}')
+        print(f'Counter: {count}')
 
 
 worker1 = Thread(target=counter, args=(10, ))
