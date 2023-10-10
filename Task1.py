@@ -1,47 +1,22 @@
 """
-Создайте  функцию,  которая  будет  создавать  CSV  файл  на  основе  данных,  введенных
-пользователем  через  консоль.  Файл  должен  содержать следующие  колонки:  имена,  фамилии,
-даты  рождений  и  город  проживания.
+Создайте простые словари и сконвертируйте их в JSON. Сохраните JSON в файл и попробуйте загрузить данные из файла
 """
-import csv
 
 
-def make_file(data: list) -> None:
-    fields = ["name", "surname", "date", "city"]
-    with open("output_task1.csv", "w") as file:
-        writer = csv.DictWriter(file, fieldnames=fields, lineterminator='\n')
+import json
 
-        writer.writeheader()
-        writer.writerow({
-            "name": data[0],
-            "surname": data[1],
-            "date": data[2],
-            "city": data[3]
-        })
+dct_1 = {"Axe": "top", "Bane": "top", "Arc Warden": "mid", "Ancient Apparition": "bot", "Phantom Assassin": "bot"}
+dct_2 = {"Marci": "top", "Slardar": "top", "Storm Spirit": "mid", "Naga Siren": "bot", "Skywrath Mage": "bot"}
+dct_3 = {"Witch Doctor": "top", "Tidehunter": "top", "Queen of Pain": "mid", "Nature's Prophet": "bot", "Lion": "bot"}
+dct_4 = {"Undying": "top", "Timbersaw": "top", "Invoker": "mid", "Faceless Void": "bot", "Keeper of the Light": "bot"}
 
+dct = [dct_1, dct_2, dct_3, dct_4]
 
-def write_road(data: list):
-    with open("output_task1.csv", "a") as file:
-        writer = csv.writer(file, lineterminator='\n')
+with open("Dota_drafts.json", "w") as file1:
+    dc_ = {"Drafts": dct}
+    json.dump(dc_, file1)
 
-        writer.writerow(data)
+with open("Dota_drafts.json", "r") as file2:
+    dct_load = json.load(file2)
 
-
-def main():
-    list_of_data = input().split()
-    make_file(list_of_data)
-    while True:
-        words = input().split()
-        if 'end' in words:
-            break
-        else:
-            write_road(words)
-
-
-if __name__ == '__main__':
-    main()
-    print()
-
-#TODO: Преобразовать файл таким образом, чтобы можно было добавлять записи к уже существующим
-#TODO: Выполнить цикл из нескольких вводов до ввода команды "end"
-#TODO: Подумать, как убрать пустую строку в файле между записями
+print(dct_load)
