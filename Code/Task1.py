@@ -1,27 +1,39 @@
 """
-Написать программу генератор случайных кубов. Используя модуль Queue (multiprocessing) создать программу генерирующую
-список чисел возведенных в 3-ю степень. Списки должны помещаться в очередь и извлекаться из нее.
-Пример вывода
-[343.0, 1000.0, 216.0]
-[64.0, 729.0, 216.0]
-[125.0, 8.0, 64.0]
+Написать программу-эмулятор ресторана, в котором есть официант и повар.
+Официант принимает заказы и выдает, а повар готовит еду. При написании использовать возможности библиотеки asyncio
+
+пример вывода
+Новый заказ: Паста
+Новый заказ: Салат Цезарь
+Новый заказ: Отбивные
+Салат Цезарь - готово
+Паста - готово
+Отбивные - готово
 """
-
-from multiprocessing import Queue
-import random
+import asyncio
 
 
-def generate_cubes(num: int):
-    for i in range(1, num):
-        yield [pow(random.randint(1, 1000), 3) for _ in range(i)]
+async def cook(order: str):
+    time_to_cook = 0
+    print('Start to cook {}'.format(order))
+    if order == 'pasta':
+        time_to_cook = 10
+    elif order == 'ceaser salad':
+        time_to_cook = 5
+    elif order == 'beef':
+        time_to_cook = 15
+    await asyncio.sleep(time_to_cook)
+    print('{} - is ready!'.format(order))
 
 
-if __name__ == '__main__':
-    queue_ = Queue()
-    gen = generate_cubes(4)
-    queue_.put(next(gen))
-    queue_.put(next(gen))
-    queue_.put(next(gen))
+async def waiter():
+    order1 = asyncio.create_task(cook('pasta'), name="Pasta")
+    order2 = asyncio.create_task(cook('beef'), name="Beef")
+    order3 = asyncio.create_task(cook('ceaser salad'), name="Salad")
 
-    while not queue_.empty():
-        print(queue_.get())
+    await order1
+    await order2
+    await order3
+
+
+asyncio.run(waiter())
