@@ -1,61 +1,54 @@
-from threading import Lock, Thread
-from time import sleep
+"""
+Используя ProcessPoolExecutor, напишите программу проверки числа на простоту. Для примера использовать большие числа:
+112272535095293, 112582705942171.
+Число является простым если делится на себя и на 1. Результатом работы программы должно являтся логическое выпажение -
+True или False.
+
+def if_prime(x):
+    if x <= 1:
+        return 0
+    elif x <= 3:
+        return x
+    elif x % 2 == 0 or x % 3 == 0:
+        return 0
+    i = 5
+    while i**2 <= x:
+        if x % i == 0 or x % (i + 2) == 0:
+            return 0
+        i += 6
+    return x
+
+"""
+from multiprocessing import Pool
+import time
+
+def if_prime(x):
+    if x <= 1:
+        return 0
+    elif x <= 3:
+        return x
+    elif x % 2 == 0 or x % 3 == 0:
+        return 0
+    i = 5
+    while i**2 <= x:
+        if x % i == 0 or x % (i + 2) == 0:
+            return 0
+        i += 6
+    return x
 
 
-class Bank:
-    def __init__(self, name, money=100):
-        self.name = name
-        self.money = money
-        self.lock = Lock()
+res = 0
 
-    def replenish(self, s=10):
-        print(self.money, 'money:', self.name)
-        self.money += s
-        print('Replenish cash:', self.name)
-
-    def withdraw(self, s=10):
-        print(self.money, 'money:', self.name)
-        sleep(1)
-        self.money -= s
-        print('Withdraw cash:', self.name)
-
-    def transfer(self, friend_bank, s=10):
-        with (self.lock, friend_bank.lock):
-            print('Lock myself: ', self.name)
-            self.withdraw(s)
-            print('Lock friend: ', friend_bank.name)
-            friend_bank.replenish(s)
+# start = time.time()
+# for i in range(1000000):
+#     res += if_prime(i)
+# end = time.time()
+# print(end - start)
 
 
-class User(Thread):
-    def __init__(self, name, bank, friend_bank):
-        super().__init__(name=name)
-        self.name = name
-        self.bank = bank
-        self.friend_bank = friend_bank
-
-    def run(self):
-        print(f'{self.name} try to transfer to {self.friend_bank.name}')
-        self.bank.transfer(self.friend_bank)
-        print(f'{self.name} made transfer operation to {self.friend_bank.name}')
-
-
-bank1 = Bank('Bob')
-bank2 = Bank('Kate')
-bank3 = Bank('Ann')
-
-user1 = User('Bob', bank1, bank2)
-user2 = User('Kate', bank2, bank3)
-user3 = User('Ann', bank3, bank2)
-
-user1.start()
-user2.start()
-user3.start()
-
-user1.join()
-user2.join()
-user3.join()
-
-print(bank1.money)
-print(bank2.money)
-print(bank3.money)
+if __name__ == '__main__':
+    start = time.time()
+    with Pool(8) as executor:
+        res = sum(executor.map(if_prime, list(range(1000000))))
+    end = time.time()
+    print(end - start)

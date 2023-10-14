@@ -1,38 +1,32 @@
 """
-Выполнить отправку 10 запросов на https://www.python.org/ в виде обычной функции и разделив на потоки.
-Результаты запросов response.status_code сохранить в виде списка. Для отправки запросов испрпользовать библиотеку requests
+Используя Pool выполнить серию запрсов на различные страницы Википедии и определить статус страницы:
+если возвращаемый статус код == 200, то статус == страница существует, если код 400, то - страница не существует.
+В списке должно быть не менее 5 url-ов. измерьте время выполнения кода без ThreadPoolExecutor и с ним
 """
+
+from multiprocessing import Pool
 import requests
-import time
-
-from threading import Thread
 
 
-websites = ['https://www.python.org/'] * 10
-result = []
+URLS = [
+    'https://ru.wikipedia.org/wiki/%D0%97%D0%B0%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0',
+    'https://ru.wikipedia.org/wiki/%D0%92%D0%B8%D0%BA%D0%B8%D0%BF%D0%B5%D0%B4%D0%B8%D1%8F:%D0%98%D0%B7%D0%B1%D1%80%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5_%D1%81%D1%82%D0%B0%D1%82%D1%8C%D0%B8',
+    'https://ru.wikipedia.org/wiki/%D0%92%D0%B8%D0%BA%D0%B8%D0%BF%D0%B5%D0%B4%D0%B8%D1%8F:%D0%9F%D0%BE%D0%BC%D0%BE%D1%89%D1%8C_%D0%BD%D0%B0%D1%87%D0%B8%D0%BD%D0%B0%D1%8E%D1%89%D0%B8%D0%BC',
+    'https://docs.python.org/3/library/exceptions.html#exception-hierarchy',
+    'https://www.urldecoder.org/'
+]
+
+statuses = []
 
 
 def make_request(url):
     resp = requests.get(url)
-    result.append(resp.status_code)
+    if resp.ok:
+        return statuses.append(resp.status_code)
+    return resp.status_code
 
 
-start = time.time()
-# for website in websites:
-#     make_request(website)
-
-print(len(result))
-print(time.time() - start) # 7.53386116027832
-
-
-threads = [Thread(target=make_request, args=(website,)) for website in websites]
-
-for thread in threads:
-    thread.start()
-
-for thread in threads:
-    thread.join()
-
-print(len(result))
-print(time.time() - start)  # 7.53386116027832
-                            # 1.2786953449249268
+if __name__ == '__main__':
+    with Pool(len(URLS)) as executor:
+        print(executor.map(make_request, URLS))
+        # print(result)

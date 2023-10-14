@@ -1,56 +1,27 @@
 """
-Реализовать класс Account с методами deposit и withdraw. В каждом методе должны присутствовать
-механизмы блокировки потока lock. Также реализовать класс пользователь (наследуется от Thread) и переопределить
-в нем метод run. На вход классу подаются 2 атрибута - имя пользователья и операция,
-которую он совершает (deposit или withdraw). Задача  блокировать возможность выполннения операции во время ее использования
-другим пользователем.
+Написать программу генератор случайных кубов. Используя модуль Queue (multiprocessing) создать программу генерирующую
+список чисел возведенных в 3-ю степень. Списки должны помещаться в очередь и извлекаться из нее.
+Пример вывода
+[343.0, 1000.0, 216.0]
+[64.0, 729.0, 216.0]
+[125.0, 8.0, 64.0]
 """
-from threading import Lock, Thread
-from time import sleep
+
+from multiprocessing import Queue
+import random
 
 
-class Account:
-    money = 10
-    lock = Lock()
-
-    def deposit(self, s=10):
-        with self.lock:
-            print(self.money, 'money')
-            sleep(3)
-            self.money += s
-            print(self.money, 'money')
-            print('make deposit')
-
-    def withdraw(self, s=10):
-        with self.lock:
-            print(self.money, 'money')
-            sleep(2)
-            if self.money >= s:
-                self.money -= s
-                print('make withdraw')
-            else:
-                print('Not enough money')
+def generate_cubes(num: int):
+    for i in range(1, num):
+        yield [pow(random.randint(1, 1000), 3) for _ in range(i)]
 
 
-class User(Thread):
-    def __init__(self, name, operation):
-        super().__init__(name=name)
-        self.name = name
-        self.operation = operation
+if __name__ == '__main__':
+    queue_ = Queue()
+    gen = generate_cubes(4)
+    queue_.put(next(gen))
+    queue_.put(next(gen))
+    queue_.put(next(gen))
 
-    def run(self):
-        print(f'{self.name} try to make {self.operation}')
-        acc = Account()
-        func = getattr(acc, self.operation)
-        func()
-        print(f'{self.name} made {self.operation}')
-
-
-user1 = User('Alex', 'deposit')
-user2 = User('Max', 'withdraw')
-
-user1.start()
-user2.start()
-
-user1.join()
-user2.join()
+    while not queue_.empty():
+        print(queue_.get())
